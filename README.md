@@ -1,5 +1,7 @@
 # raw-body
 
+> This fork makes sure we use the byte length instead of the char count. The default node server does this anyway so not usually an issue but uWebsocketsJS does not....So using that with body-parser can stuff up reqs with for eg special characters in body. 
+
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Node.js Version][node-version-image]][node-version-url]
