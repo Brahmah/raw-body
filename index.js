@@ -251,22 +251,24 @@ function readStream (stream, encoding, length, limit, callback) {
     }))
   }
 
-  function onData (chunk) {
-    if (complete) return
-
-    received += chunk.length
-
-    if (limit !== null && received > limit) {
-      done(createError(413, 'request entity too large', {
-        limit: limit,
-        received: received,
-        type: 'entity.too.large'
-      }))
-    } else if (decoder) {
-      buffer += decoder.write(chunk)
-    } else {
-      buffer.push(chunk)
-    }
+  function onData(chunk) {
+      if (complete) return;
+  
+      // If 'chunk' is a string, convert it to a Buffer to measure bytes accurately
+      var bufferChunk = Buffer.from(chunk);
+      received += bufferChunk.byteLength;
+  
+      if (limit !== null && received > limit) {
+          done(createError(413, 'request entity too large', {
+              limit: limit,
+              received: received,
+              type: 'entity.too.large'
+          }));
+      } else if (decoder) {
+          buffer += decoder.write(chunk);
+      } else {
+          buffer.push(bufferChunk); // Store buffer chunks instead of string chunks
+      }
   }
 
   function onEnd (err) {
